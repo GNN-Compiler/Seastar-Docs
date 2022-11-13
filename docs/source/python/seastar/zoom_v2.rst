@@ -10,9 +10,9 @@ Compiler Interface (zoom_v2)
     ``GraphInfo(number_of_nodes, number_of_edges, in_row_offsets, in_col_indices, in_eids, out_row_offsets, out_col_indices, out_eids, nbits)``
  
     .. py:attribute:: _f
-        :type: 
+        :type: function
     .. py:attribute:: _nspace
-        :type: 
+        :type: list
     .. py:attribute:: _entry_count
         :type: int
     .. py:attribute:: _run_cb
