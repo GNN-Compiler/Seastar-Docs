@@ -42,6 +42,9 @@ Setup Executor
 
             return self._executor_cache
 
+Function Overview
+-----------------
+
     .. code-block:: python
         :lineno-start: 2
 

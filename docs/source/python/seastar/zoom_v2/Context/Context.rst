@@ -15,7 +15,7 @@ Attributes
 
 ``_input_cache``: Dictionary
 
-``_graph_info_cache``: None
+``_graph_info_cache``: GraphInfo tuple
 
 ``_executor_cache``: None
 
@@ -26,4 +26,5 @@ Methods
     :maxdepth: 1
 
     init
-    setup_executor
+    _setup_executor
+    _update_graph_info
