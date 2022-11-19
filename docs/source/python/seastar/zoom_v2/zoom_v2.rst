@@ -41,5 +41,5 @@ Classes
 .. toctree::
     :maxdepth: 1
 
-    Context
-    CtxManager
+    Context/Context
+    CtxManager/CtxManager
