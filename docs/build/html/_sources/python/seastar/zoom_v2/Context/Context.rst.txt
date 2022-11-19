@@ -26,3 +26,4 @@ Methods
     :maxdepth: 1
 
     init
+    setup_executor
