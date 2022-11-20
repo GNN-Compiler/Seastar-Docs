@@ -84,16 +84,20 @@
              
   <section id="update-graph-info">
 <h1>Update Graph Info<a class="headerlink" href="#update-graph-info" title="Permalink to this heading"></a></h1>
+<p>Updates the attribute <code class="docutils literal notranslate"><span class="pre">_graph_info_cache</span></code> with the <code class="docutils literal notranslate"><span class="pre">graph</span></code> passed as argument.
+Here <code class="docutils literal notranslate"><span class="pre">_graph_info_cache</span></code> is the namedtuple <code class="docutils literal notranslate"><span class="pre">GraphInfo</span></code> declared inside <code class="docutils literal notranslate"><span class="pre">class</span> <span class="pre">Context</span></code>.
+It only updates it if <code class="docutils literal notranslate"><span class="pre">_graph_info_cache</span></code> is <code class="docutils literal notranslate"><span class="pre">None</span></code> or if the graph properties like number of
+edges or number of nodes changes. A boolean flag <code class="docutils literal notranslate"><span class="pre">reset</span></code> is also returned, indicating if
+<code class="docutils literal notranslate"><span class="pre">_graph_info_cache</span></code> was updated by this function.</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="update_graph_info">
 <span class="sig-name descname"><span class="pre">_update_graph_info</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">graph</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#update_graph_info" title="Permalink to this definition"></a></dt>
-<dd><p>TODO: Add function description</p>
-<dl class="field-list simple">
+<dd><dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>graph</strong> – A DGL graph object</p>
 </dd>
 <dt class="field-even">Return type</dt>
-<dd class="field-even"><p>GraphInfo tuple, bool</p>
+<dd class="field-even"><p>GraphInfo, bool</p>
 </dd>
 </dl>
 <div class="literal-block-wrapper docutils container" id="id1">

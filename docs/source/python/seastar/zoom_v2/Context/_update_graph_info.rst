@@ -2,12 +2,16 @@
 Update Graph Info
 =================
 
+Updates the attribute ``_graph_info_cache`` with the ``graph`` passed as argument.
+Here ``_graph_info_cache`` is the namedtuple ``GraphInfo`` declared inside ``class Context``.
+It only updates it if ``_graph_info_cache`` is ``None`` or if the graph properties like number of
+edges or number of nodes changes. A boolean flag ``reset`` is also returned, indicating if 
+``_graph_info_cache`` was updated by this function.
+
 .. function:: _update_graph_info(self, graph)
 
-    TODO: Add function description
-
     :param graph: A DGL graph object
-    :rtype: GraphInfo tuple, bool
+    :rtype: GraphInfo, bool
 
     .. code-block:: python
         :linenos:

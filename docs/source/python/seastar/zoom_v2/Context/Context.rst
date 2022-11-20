@@ -28,3 +28,4 @@ Methods
     init
     _setup_executor
     _update_graph_info
+    _trace

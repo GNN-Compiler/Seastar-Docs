@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Trace &mdash; Seastar 1.0.0 documentation</title>
+      <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
+        <script src="../../../../_static/jquery.js"></script>
+        <script src="../../../../_static/underscore.js"></script>
+        <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../../../_static/doctools.js"></script>
+    <script src="../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" />
+    <link rel="next" title="CtxManager" href="../CtxManager/CtxManager.html" />
+    <link rel="prev" title="Update Graph Info" href="_update_graph_info.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../../../index.html" class="icon icon-home"> Seastar
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Codebase</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../../../exp.html">exp</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../../../../python.html">python</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="../../../seastar.html">seastar</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="../zoom_v2.html">zoom_v2</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="../zoom_v2.html#dependencies">Dependencies</a></li>
+<li class="toctree-l4 current"><a class="reference internal" href="../zoom_v2.html#classes">Classes</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">Seastar</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../../../../python.html">python</a> &raquo;</li>
+          <li><a href="../../../seastar.html">seastar</a> &raquo;</li>
+          <li><a href="../zoom_v2.html">zoom_v2</a> &raquo;</li>
+          <li><a href="Context.html">Context</a> &raquo;</li>
+      <li>Trace</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../../../_sources/python/seastar/zoom_v2/Context/_trace.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="trace">
+<h1>Trace<a class="headerlink" href="#trace" title="Permalink to this heading"></a></h1>
+<p><strong>Add function desciption</strong></p>
+<dl class="py function">
+<dt class="sig sig-object py" id="id0">
+<span class="sig-name descname"><span class="pre">_trace</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nfeats</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">efeats</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">input_cache</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fprog</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#id0" title="Permalink to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>nfeats</strong> – A dictionary containing node features <em>norm</em> and <em>h</em></p></li>
+<li><p><strong>efeats</strong> – A dictionary containing edge features</p></li>
+<li><p><strong>input_cache</strong> – A dictionary</p></li>
+<li><p><strong>fprog</strong> – <em>None = head(None)</em></p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p></p>
+</dd>
+</dl>
+<div class="literal-block-wrapper docutils container" id="id1">
+<div class="code-block-caption"><span class="caption-text">source code for _trace()</span><a class="headerlink" href="#id1" title="Permalink to this code"></a></div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="k">def</span> <span class="nf">_trace</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">nfeats</span><span class="p">,</span> <span class="n">efeats</span><span class="p">,</span> <span class="n">input_cache</span><span class="p">,</span> <span class="n">fprog</span><span class="p">):</span>
+<span class="linenos"> 2</span>    <span class="n">backend</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">find_backend</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_nspace</span><span class="p">)</span>
+<span class="linenos"> 3</span>    <span class="n">central_node</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_init_central_node</span><span class="p">(</span><span class="n">nfeats</span><span class="p">,</span> <span class="n">efeats</span><span class="p">,</span> <span class="n">fprog</span><span class="p">,</span> <span class="n">backend</span><span class="p">)</span>
+<span class="linenos"> 4</span>    <span class="n">old_libs</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="nb">dict</span><span class="p">)</span>
+<span class="linenos"> 5</span>
+<span class="linenos"> 6</span>    <span class="bp">self</span><span class="o">.</span><span class="n">_monkey_patch_namespace</span><span class="p">(</span><span class="n">old_libs</span><span class="p">,</span> <span class="n">input_cache</span><span class="p">,</span> <span class="n">fprog</span><span class="p">,</span> <span class="n">backend</span><span class="p">)</span>
+<span class="linenos"> 7</span>    <span class="n">ret</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_f</span><span class="p">(</span><span class="n">central_node</span><span class="p">)</span>
+<span class="linenos"> 8</span>    <span class="bp">self</span><span class="o">.</span><span class="n">_remove_patch</span><span class="p">(</span><span class="n">old_libs</span><span class="p">,</span> <span class="n">backend</span><span class="p">)</span>
+<span class="linenos"> 9</span>
+<span class="linenos">10</span>    <span class="k">if</span> <span class="n">ret</span> <span class="o">==</span> <span class="kc">None</span><span class="p">:</span>
+<span class="linenos">11</span>        <span class="k">raise</span> <span class="ne">NameError</span><span class="p">(</span><span class="s1">&#39;Ret is none. Execution is aborted&#39;</span><span class="p">)</span>
+<span class="linenos">12</span>
+<span class="linenos">13</span>    <span class="k">return</span> <span class="p">[</span><span class="n">ret</span><span class="o">.</span><span class="n">var</span><span class="p">]</span> <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">ret</span><span class="p">,</span> <span class="n">Iterable</span><span class="p">)</span> <span class="k">else</span> <span class="n">ret</span><span class="o">.</span><span class="n">var</span>
+</pre></div>
+</div>
+</div>
+</dd></dl>
+
+<section id="function-overview">
+<h2>Function Overview<a class="headerlink" href="#function-overview" title="Permalink to this heading"></a></h2>
+<blockquote>
+<div><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos">2</span><span class="n">backend</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">find_backend</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_nspace</span><span class="p">)</span>
+<span class="linenos">3</span><span class="n">central_node</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_init_central_node</span><span class="p">(</span><span class="n">nfeats</span><span class="p">,</span> <span class="n">efeats</span><span class="p">,</span> <span class="n">fprog</span><span class="p">,</span> <span class="n">backend</span><span class="p">)</span>
+<span class="linenos">4</span><span class="n">old_libs</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="nb">dict</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">self.find_backend</span></code> returns a tuple containing information about the backend being used. The
+tuple is of the form <em>(backend-name, backend-module-instance)</em>.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="p">(</span><span class="n">pdb</span><span class="p">)</span> <span class="n">p</span> <span class="n">backend</span>
+<span class="go">(&#39;torch&#39;, &lt;module &#39;torch&#39; from &#39;/home/nithin/anaconda3/envs/seastar-new/lib/python3.10/site-packages/torch/__init__.py&#39;&gt;)</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">central_node</span></code> is a <code class="docutils literal notranslate"><span class="pre">CentralNode</span></code> object returned by <code class="docutils literal notranslate"><span class="pre">_init_central_node()</span></code>.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="p">(</span><span class="n">pdb</span><span class="p">)</span> <span class="n">p</span> <span class="n">central_node</span>
+<span class="go">&lt;seastar.node.CentralNode object at 0x7fa5cb667340&gt;</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">old_libs</span></code> is a defaultdict with the default_factory argument as a dictionary.
+To learn more about defaultdict, refer <a class="reference external" href="https://www.geeksforgeeks.org/defaultdict-in-python/">this</a></p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="p">(</span><span class="n">pdb</span><span class="p">)</span> <span class="n">p</span> <span class="n">old_libs</span>
+<span class="go">defaultdict(&lt;class &#39;dict&#39;&gt;, {})</span>
+</pre></div>
+</div>
+<div class="literal-block-wrapper docutils container" id="id2">
+<div class="code-block-caption"><span class="caption-text">todo explanation for line 6 and 8</span><a class="headerlink" href="#id2" title="Permalink to this code"></a></div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos">6</span><span class="bp">self</span><span class="o">.</span><span class="n">_monkey_patch_namespace</span><span class="p">(</span><span class="n">old_libs</span><span class="p">,</span> <span class="n">input_cache</span><span class="p">,</span> <span class="n">fprog</span><span class="p">,</span> <span class="n">backend</span><span class="p">)</span>
+<span class="linenos">7</span><span class="n">ret</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_f</span><span class="p">(</span><span class="n">central_node</span><span class="p">)</span>
+<span class="linenos">8</span><span class="bp">self</span><span class="o">.</span><span class="n">_remove_patch</span><span class="p">(</span><span class="n">old_libs</span><span class="p">,</span> <span class="n">backend</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">self._f</span></code> makes a call to the function <code class="docutils literal notranslate"><span class="pre">nb_compute()</span></code> with central_node passed as an argument.
+The returned value is stored in <code class="docutils literal notranslate"><span class="pre">ret</span></code></p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="p">(</span><span class="n">pdb</span><span class="p">)</span> <span class="n">p</span> <span class="n">ret</span>
+<span class="go">V2(ValType.D,[1433],grad:None)</span>
+</pre></div>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos">10</span><span class="k">if</span> <span class="n">ret</span> <span class="o">==</span> <span class="kc">None</span><span class="p">:</span>
+<span class="linenos">11</span>    <span class="k">raise</span> <span class="ne">NameError</span><span class="p">(</span><span class="s1">&#39;Ret is none. Execution is aborted&#39;</span><span class="p">)</span>
+<span class="linenos">12</span>
+<span class="linenos">13</span><span class="k">return</span> <span class="p">[</span><span class="n">ret</span><span class="o">.</span><span class="n">var</span><span class="p">]</span> <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">ret</span><span class="p">,</span> <span class="n">Iterable</span><span class="p">)</span> <span class="k">else</span> <span class="n">ret</span><span class="o">.</span><span class="n">var</span>
+</pre></div>
+</div>
+<p>Incase <code class="docutils literal notranslate"><span class="pre">ret</span></code> has the value <code class="docutils literal notranslate"><span class="pre">None</span></code>, an error is raised and execution is aborted.
+The return statement just makes sure that the return value is an iterable.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">Return</span> <span class="n">value</span> <span class="kn">from</span> <span class="nn">Context._trace</span><span class="p">:</span> <span class="p">[</span><span class="n">V2</span><span class="p">(</span><span class="n">ValType</span><span class="o">.</span><span class="n">D</span><span class="p">,[</span><span class="mi">1433</span><span class="p">],</span><span class="n">grad</span><span class="p">:</span><span class="kc">None</span><span class="p">)]</span>
+</pre></div>
+</div>
+</div></blockquote>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="_update_graph_info.html" class="btn btn-neutral float-left" title="Update Graph Info" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../CtxManager/CtxManager.html" class="btn btn-neutral float-right" title="CtxManager" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Joel Mathew Cherian, Nithin Puthalath Manoj.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
