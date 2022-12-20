@@ -27,6 +27,12 @@ Seastar is successful in achieving lesser memory consumption and faster executio
    exp
    python
 
+.. toctree::
+   :maxdepth: 1
+   :caption: Learning Seastar
+
+   Compiler Flow
+
 Indices and tables
 ==================
 
