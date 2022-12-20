@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>GCN &mdash; Seastar 1.0.0 documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../_static/doctools.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="prev" title="Compiler Flow" href="../Compiler%20Flow.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../index.html" class="icon icon-home"> Seastar
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Codebase</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../exp.html">exp</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../python.html">python</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Learning Seastar</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../Compiler%20Flow.html">Compiler Flow</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">GCN</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#defining-the-gcn-model">Defining the GCN Model</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#gcn-forward-call">GCN Forward Call</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#decorating-nb-compute">Decorating nb_compute</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#calling-nb-compute">Calling nb_compute</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Seastar</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../Compiler%20Flow.html">Compiler Flow</a> &raquo;</li>
+      <li>GCN</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/Compiler Flow/GCN.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="gcn">
+<h1>GCN<a class="headerlink" href="#gcn" title="Permalink to this heading"></a></h1>
+<p>Please refer to the modulewise decoupled version of <a class="reference external" href="https://github.com/GNN-Compiler/Seastar-modulewise-code">GCN Seastar</a>.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>We have used the toy graph example <a class="reference external" href="https://github.com/GNN-Compiler/Seastar-modulewise-code/tree/main/dataset/koorah">Koorah</a>.
+We might switch to some other standard dataset later when learning, but Koorah is simple to understandand and view whats
+going on in each step of the way.</p>
+</div>
+<p>Here is the decoupled version of gcn.py</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="k">class</span> <span class="nc">GCNModel</span><span class="p">():</span>
+<span class="linenos"> 2</span>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">g</span><span class="p">):</span>
+<span class="linenos"> 3</span>        <span class="bp">self</span><span class="o">.</span><span class="n">g</span> <span class="o">=</span> <span class="n">g</span>
+<span class="linenos"> 4</span>        <span class="bp">self</span><span class="o">.</span><span class="n">cm</span> <span class="o">=</span> <span class="n">CtxManager</span><span class="p">(</span><span class="kc">None</span><span class="p">)</span>
+<span class="linenos"> 5</span>
+<span class="linenos"> 6</span>    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">h</span><span class="p">):</span>
+<span class="linenos"> 7</span>
+<span class="linenos"> 8</span>        <span class="nd">@self</span><span class="o">.</span><span class="n">cm</span><span class="o">.</span><span class="n">zoomIn</span><span class="p">(</span><span class="n">nspace</span><span class="o">=</span><span class="p">[</span><span class="bp">self</span><span class="p">,</span> <span class="n">torch</span><span class="p">])</span>
+<span class="linenos"> 9</span>        <span class="k">def</span> <span class="nf">nb_compute</span><span class="p">(</span><span class="n">v</span><span class="p">):</span>
+<span class="linenos">10</span>            <span class="n">h</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">([</span><span class="n">nb</span><span class="o">.</span><span class="n">h</span><span class="o">*</span><span class="n">nb</span><span class="o">.</span><span class="n">norm</span> <span class="k">for</span> <span class="n">nb</span> <span class="ow">in</span> <span class="n">v</span><span class="o">.</span><span class="n">innbs</span><span class="p">])</span>
+<span class="linenos">11</span>            <span class="n">h</span> <span class="o">=</span> <span class="n">h</span> <span class="o">*</span> <span class="n">v</span><span class="o">.</span><span class="n">norm</span>
+<span class="linenos">12</span>            <span class="k">return</span> <span class="n">h</span>
+<span class="linenos">13</span>
+<span class="linenos">14</span>        <span class="n">nb_compute</span><span class="p">(</span> <span class="n">g</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">g</span><span class="p">,</span>
+<span class="linenos">15</span>                    <span class="n">n_feats</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;norm&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">g</span><span class="o">.</span><span class="n">ndata</span><span class="p">[</span><span class="s1">&#39;norm&#39;</span><span class="p">],</span> <span class="s1">&#39;h&#39;</span> <span class="p">:</span> <span class="n">h</span><span class="p">})</span>
+<span class="linenos">16</span>
+<span class="linenos">17</span>
+<span class="linenos">18</span><span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+<span class="linenos">19</span>
+<span class="linenos">20</span>    <span class="n">out_file_path</span> <span class="o">=</span> <span class="s2">&quot;../output/cuda_code_output.txt&quot;</span>
+<span class="linenos">21</span>    <span class="n">f</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">out_file_path</span><span class="p">,</span> <span class="s2">&quot;a&quot;</span><span class="p">)</span>
+<span class="linenos">22</span>    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;GCN CUDA OUTPUT</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="s2">&quot;*&quot;</span><span class="o">*</span><span class="mi">15</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="linenos">23</span>    <span class="n">f</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+<span class="linenos">24</span>
+<span class="linenos">25</span>    <span class="n">dataset</span> <span class="o">=</span> <span class="s1">&#39;koorah&#39;</span>
+<span class="linenos">26</span>    <span class="n">path</span> <span class="o">=</span> <span class="s1">&#39;../dataset/&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">dataset</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;/&#39;</span>
+<span class="linenos">27</span>
+<span class="linenos">28</span>    <span class="n">edges</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">path</span> <span class="o">+</span> <span class="s1">&#39;edges.npy&#39;</span><span class="p">)</span>
+<span class="linenos">29</span>    <span class="n">features</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">path</span> <span class="o">+</span> <span class="s1">&#39;features.npy&#39;</span><span class="p">)</span>
+<span class="linenos">30</span>    <span class="n">labels</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">path</span> <span class="o">+</span> <span class="s1">&#39;labels.npy&#39;</span><span class="p">)</span>
+<span class="linenos">31</span>
+<span class="linenos">32</span>    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;dataset </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">dataset</span><span class="p">))</span>
+<span class="linenos">33</span>    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;# of edges : </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">edges</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
+<span class="linenos">34</span>    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;# of nodes : </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">features</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
+<span class="linenos">35</span>    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;# of features : </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">features</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
+<span class="linenos">36</span>    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;# of classes : </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="nb">max</span><span class="p">(</span><span class="n">labels</span><span class="p">)</span> <span class="o">-</span> <span class="nb">min</span><span class="p">(</span><span class="n">labels</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)))</span>
+<span class="linenos">37</span>
+<span class="linenos">38</span>    <span class="n">features</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">FloatTensor</span><span class="p">(</span><span class="n">features</span><span class="p">)</span>
+<span class="linenos">39</span>    <span class="n">labels</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">LongTensor</span><span class="p">(</span><span class="n">labels</span><span class="p">)</span>
+<span class="linenos">40</span>
+<span class="linenos">41</span>    <span class="n">source_nodes</span> <span class="o">=</span> <span class="n">edges</span><span class="p">[:,</span><span class="mi">0</span><span class="p">]</span>
+<span class="linenos">42</span>    <span class="n">destination_nodes</span> <span class="o">=</span> <span class="n">edges</span><span class="p">[:,</span><span class="mi">1</span><span class="p">]</span>
+<span class="linenos">43</span>    <span class="n">koorah_graph</span> <span class="o">=</span> <span class="n">dgl</span><span class="o">.</span><span class="n">graph</span><span class="p">((</span><span class="n">source_nodes</span><span class="p">,</span><span class="n">destination_nodes</span><span class="p">),</span>
+<span class="linenos">44</span>                              <span class="n">num_nodes</span><span class="o">=</span><span class="n">features</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+<span class="linenos">45</span>
+<span class="linenos">46</span>    <span class="n">in_degree_list</span> <span class="o">=</span> <span class="n">koorah_graph</span><span class="o">.</span><span class="n">in_degrees</span><span class="p">()</span><span class="o">.</span><span class="n">float</span><span class="p">()</span>
+<span class="linenos">47</span>
+<span class="linenos">48</span>    <span class="n">norm</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">pow</span><span class="p">(</span><span class="n">in_degree_list</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.5</span><span class="p">)</span>
+<span class="linenos">49</span>    <span class="n">norm</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">isinf</span><span class="p">(</span><span class="n">norm</span><span class="p">)]</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="linenos">50</span>    <span class="n">koorah_graph</span><span class="o">.</span><span class="n">ndata</span><span class="p">[</span><span class="s1">&#39;norm&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">norm</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<span class="linenos">51</span>
+<span class="linenos">52</span>    <span class="n">model</span> <span class="o">=</span> <span class="n">GCNModel</span><span class="p">(</span><span class="n">koorah_graph</span><span class="p">)</span>
+<span class="linenos">53</span>    <span class="n">model</span><span class="o">.</span><span class="n">forward</span><span class="p">(</span><span class="n">features</span><span class="p">)</span>
+</pre></div>
+</div>
+<section id="defining-the-gcn-model">
+<h2>Defining the GCN Model<a class="headerlink" href="#defining-the-gcn-model" title="Permalink to this heading"></a></h2>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos">52</span><span class="n">model</span> <span class="o">=</span> <span class="n">GCNModel</span><span class="p">(</span><span class="n">koorah_graph</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>This creates an instance of the class <code class="docutils literal notranslate"><span class="pre">GCNModel</span></code>. A DGLGraph object representing the Koorah dataset is passed to the constructor and is set to the <code class="docutils literal notranslate"><span class="pre">g</span></code> attribute.
+<code class="docutils literal notranslate"><span class="pre">model</span></code> also has a context manager attribute <code class="docutils literal notranslate"><span class="pre">cm</span></code> which is a <code class="docutils literal notranslate"><span class="pre">CtxManager</span></code> object.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos">2</span><span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">g</span><span class="p">):</span>
+<span class="linenos">3</span>    <span class="bp">self</span><span class="o">.</span><span class="n">g</span> <span class="o">=</span> <span class="n">g</span>
+<span class="linenos">4</span>    <span class="bp">self</span><span class="o">.</span><span class="n">cm</span> <span class="o">=</span> <span class="n">CtxManager</span><span class="p">(</span><span class="kc">None</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="p">(</span><span class="n">Pdb</span><span class="p">)</span> <span class="n">p</span> <span class="n">model</span><span class="o">.</span><span class="vm">__dict__</span>
+<span class="go">{&#39;g&#39;: Graph(num_nodes=6, num_edges=10,</span>
+<span class="go">      ndata_schemes={&#39;norm&#39;: Scheme(shape=(1,), dtype=torch.float32)}</span>
+<span class="go">      edata_schemes={}), &#39;cm&#39;: &lt;seastar.zoom_v2.CtxManager object at 0x7f6b7fe6b640&gt;}</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">cm</span></code> has <code class="docutils literal notranslate"><span class="pre">_ctx_map</span></code> and <code class="docutils literal notranslate"><span class="pre">_run_cb</span></code> as class attributes. <code class="docutils literal notranslate"><span class="pre">_ctx_map</span></code> is initialised to an empty dictionary
+and <code class="docutils literal notranslate"><span class="pre">_run_cb_</span></code> is set to None.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="k">class</span> <span class="nc">CtxManager</span><span class="p">():</span>
+<span class="linenos">2</span>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">run_cb</span><span class="p">):</span>
+<span class="linenos">3</span>        <span class="bp">self</span><span class="o">.</span><span class="n">_ctx_map</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="linenos">4</span>        <span class="bp">self</span><span class="o">.</span><span class="n">_run_cb</span> <span class="o">=</span> <span class="n">run_cb</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="p">(</span><span class="n">Pdb</span><span class="p">)</span> <span class="n">p</span> <span class="n">model</span><span class="o">.</span><span class="n">cm</span><span class="o">.</span><span class="vm">__dict__</span>
+<span class="go">{&#39;_ctx_map&#39;: {}, &#39;_run_cb&#39;: None}</span>
+</pre></div>
+</div>
+</section>
+<section id="gcn-forward-call">
+<h2>GCN Forward Call<a class="headerlink" href="#gcn-forward-call" title="Permalink to this heading"></a></h2>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos">53</span><span class="n">model</span><span class="o">.</span><span class="n">forward</span><span class="p">(</span><span class="n">features</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>We call the <code class="docutils literal notranslate"><span class="pre">model.forward()</span></code> method.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 6</span><span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">h</span><span class="p">):</span>
+<span class="linenos"> 7</span>
+<span class="linenos"> 8</span>    <span class="nd">@self</span><span class="o">.</span><span class="n">cm</span><span class="o">.</span><span class="n">zoomIn</span><span class="p">(</span><span class="n">nspace</span><span class="o">=</span><span class="p">[</span><span class="bp">self</span><span class="p">,</span> <span class="n">torch</span><span class="p">])</span>
+<span class="linenos"> 9</span>    <span class="k">def</span> <span class="nf">nb_compute</span><span class="p">(</span><span class="n">v</span><span class="p">):</span>
+<span class="linenos">10</span>        <span class="n">h</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">([</span><span class="n">nb</span><span class="o">.</span><span class="n">h</span><span class="o">*</span><span class="n">nb</span><span class="o">.</span><span class="n">norm</span> <span class="k">for</span> <span class="n">nb</span> <span class="ow">in</span> <span class="n">v</span><span class="o">.</span><span class="n">innbs</span><span class="p">])</span>
+<span class="linenos">11</span>        <span class="n">h</span> <span class="o">=</span> <span class="n">h</span> <span class="o">*</span> <span class="n">v</span><span class="o">.</span><span class="n">norm</span>
+<span class="linenos">12</span>        <span class="k">return</span> <span class="n">h</span>
+<span class="linenos">13</span>
+<span class="linenos">14</span>    <span class="n">nb_compute</span><span class="p">(</span> <span class="n">g</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">g</span><span class="p">,</span>
+<span class="linenos">15</span>                <span class="n">n_feats</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;norm&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">g</span><span class="o">.</span><span class="n">ndata</span><span class="p">[</span><span class="s1">&#39;norm&#39;</span><span class="p">],</span> <span class="s1">&#39;h&#39;</span> <span class="p">:</span> <span class="n">h</span><span class="p">})</span>
+</pre></div>
+</div>
+<section id="decorating-nb-compute">
+<h3>Decorating nb_compute<a class="headerlink" href="#decorating-nb-compute" title="Permalink to this heading"></a></h3>
+<p>We notice that the nb_compute() function is decorated by <code class="docutils literal notranslate"><span class="pre">cm.zoomIn()</span></code> inside forward().</p>
+<div class="literal-block-wrapper docutils container" id="id1">
+<div class="code-block-caption"><span class="caption-text">CtxManager.zoomIn() in zoom_v2.py</span><a class="headerlink" href="#id1" title="Permalink to this code"></a></div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="k">def</span> <span class="nf">zoomIn</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">nspace</span><span class="p">,</span> <span class="n">hetero_graph</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<span class="linenos"> 2</span>    <span class="k">def</span> <span class="nf">wrapper</span><span class="p">(</span><span class="n">func</span><span class="p">):</span>
+<span class="linenos"> 3</span>        <span class="k">if</span> <span class="ow">not</span> <span class="n">func</span><span class="o">.</span><span class="vm">__name__</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ctx_map</span><span class="p">:</span>
+<span class="linenos"> 4</span>            <span class="k">if</span> <span class="ow">not</span> <span class="n">hetero_graph</span><span class="p">:</span>
+<span class="linenos"> 5</span>                <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;create context:&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ctx_map</span><span class="p">)</span>
+<span class="linenos"> 6</span>                <span class="bp">self</span><span class="o">.</span><span class="n">_ctx_map</span><span class="p">[</span><span class="n">func</span><span class="o">.</span><span class="vm">__name__</span><span class="p">]</span> <span class="o">=</span> <span class="n">Context</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">nspace</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_run_cb</span><span class="p">)</span>
+<span class="linenos"> 7</span>            <span class="k">else</span><span class="p">:</span>
+<span class="linenos"> 8</span>                <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s1">&#39;Heterogeneous graph is not supported yet&#39;</span><span class="p">)</span>
+<span class="linenos"> 9</span>        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ctx_map</span><span class="p">[</span><span class="n">func</span><span class="o">.</span><span class="vm">__name__</span><span class="p">]</span>
+<span class="linenos">10</span>    <span class="k">return</span> <span class="n">wrapper</span>
+</pre></div>
+</div>
+</div>
+<p>nspace = [self, torch] is passed as argument to zoomIn() and wrapper() takes func = <code class="docutils literal notranslate"><span class="pre">nb_compute()</span></code> as argument.
+wrapper() creates a <code class="docutils literal notranslate"><span class="pre">Context</span></code> object is stored in <code class="docutils literal notranslate"><span class="pre">_ctx_map</span></code> dictionary with nb_compute as key.
+This Context object is then returned from wrapper() and the decorated nb_compute() function now points to this Context object.</p>
+</section>
+<section id="calling-nb-compute">
+<h3>Calling nb_compute<a class="headerlink" href="#calling-nb-compute" title="Permalink to this heading"></a></h3>
+<p>Since nb_compute() is decorated and points to a Context object, when we call nb_compute(), Context.__call__() is called.</p>
+<div class="literal-block-wrapper docutils container" id="id2">
+<div class="code-block-caption"><span class="caption-text">Context.__call__() in zoom_v2.py</span><a class="headerlink" href="#id2" title="Permalink to this code"></a></div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="linenos">2</span>
+<span class="linenos">3</span>    <span class="bp">self</span><span class="o">.</span><span class="n">_setup_executor</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+<span class="linenos">4</span>    <span class="k">return</span> <span class="kc">None</span>
+</pre></div>
+</div>
+</div>
+<p>kwargs is a dictionary containing the arguments passed. Since the following call to nb_compute() is made</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos">14</span><span class="n">nb_compute</span><span class="p">(</span> <span class="n">g</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">g</span><span class="p">,</span>
+<span class="linenos">15</span>            <span class="n">n_feats</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;norm&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">g</span><span class="o">.</span><span class="n">ndata</span><span class="p">[</span><span class="s1">&#39;norm&#39;</span><span class="p">],</span> <span class="s1">&#39;h&#39;</span> <span class="p">:</span> <span class="n">h</span><span class="p">})</span>
+</pre></div>
+</div>
+<p>kwargs will contain the following arguments passed to nb_compute().</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="p">(</span><span class="n">Pdb</span><span class="p">)</span> <span class="n">p</span> <span class="n">kwargs</span>
+<span class="go">{&#39;g&#39;: Graph(num_nodes=6, num_edges=10,</span>
+<span class="go">      ndata_schemes={&#39;norm&#39;: Scheme(shape=(1,), dtype=torch.float32)}</span>
+<span class="go">      edata_schemes={}), &#39;n_feats&#39;: {&#39;norm&#39;: tensor([[0.0000],</span>
+<span class="go">        [1.0000],</span>
+<span class="go">        [1.0000],</span>
+<span class="go">        [0.5000],</span>
+<span class="go">        [0.7071],</span>
+<span class="go">        [0.7071]]), &#39;h&#39;: tensor([[1., 2., 4.],</span>
+<span class="go">        [5., 1., 3.],</span>
+<span class="go">        [3., 2., 2.],</span>
+<span class="go">        [1., 2., 3.],</span>
+<span class="go">        [1., 2., 4.],</span>
+<span class="go">        [4., 1., 3.]])}}</span>
+</pre></div>
+</div>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../Compiler%20Flow.html" class="btn btn-neutral float-left" title="Compiler Flow" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Joel Mathew Cherian, Nithin Puthalath Manoj.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
